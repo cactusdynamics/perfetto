@@ -178,7 +178,7 @@ const SECTIONS: Section[] = [
         i: 'area_chart',
         isVisible: () => VIZ_PAGE_IN_NAV_FLAG.get(),
       },
-      {t: 'Metrics', a: navigateMetrics, i: 'speed'},
+      {t: 'Latency', a: navigateLatency, i: 'speed'},
       {t: 'Info and stats', a: navigateInfo, i: 'info'},
     ],
   },
@@ -224,13 +224,8 @@ const SECTIONS: Section[] = [
     summary: 'Open an example trace',
     items: [
       {
-        t: 'Open Android example',
-        a: openTraceUrl(EXAMPLE_ANDROID_TRACE_URL),
-        i: 'description',
-      },
-      {
-        t: 'Open Chrome example',
-        a: openTraceUrl(EXAMPLE_CHROME_TRACE_URL),
+        t: 'RT example 1',
+        a: openTraceUrl("https://cactusdynamics.github.io/perfetto/data/example1.perfetto"),
         i: 'description',
       },
     ],
@@ -480,9 +475,15 @@ function navigateFlags(e: Event) {
   Router.navigate('#!/flags');
 }
 
+// @ts-ignore
 function navigateMetrics(e: Event) {
   e.preventDefault();
   Router.navigate('#!/metrics');
+}
+
+function navigateLatency(e: Event) {
+  e.preventDefault();
+  Router.navigate('#!/latency');
 }
 
 function navigateInfo(e: Event) {
