@@ -1,0 +1,45 @@
+on:
+  push:
+    branches:
+      - cactus-rt
+
+concurrency:
+  group: production
+  cancel-in-progress: true
+
+name: deploy
+
+jobs:
+  build-and-deploy:
+    # runs-on: [self-hosted, jammy]
+    runs-on: ubuntu-latest
+
+    environment: production
+
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup dependencies
+        run: .github/deploy/00-install-dependencies.sh
+
+      - name: Build Perfetto UI
+        run: .github/deploy/01-build-perfetto-ui.sh
+
+      - name: Fix permissions
+        run: |
+          chmod -c -R +rX "ui/out/dist/" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: "ui/out/dist"
+
+      - name: Deploy to Github pages
+        id: deployment
+        uses: actions/deploy-pages@v2
