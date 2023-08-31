@@ -55,7 +55,9 @@ function getEngine(): EngineProxy | undefined {
 async function getSlices(engine: EngineProxy): Promise<string[]> {
   const slices: string[] = [];
 
-  const result = await engine.query("select distinct name from slices order by name");
+  await engine.query('select import("experimental.slices")');
+
+  const result = await engine.query("select distinct name from experimental_slice_with_thread_and_process_info order by name");
   for (const it = result.iter({ name: STR }); it.valid(); it.next()) {
     slices.push(it.name);
   }
